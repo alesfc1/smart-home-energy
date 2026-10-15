@@ -15,7 +15,7 @@ Zgodovinske podatke sistem analizira in jih primerja z aktualnimi vremenskimi po
 
 Glavni cilj projekta je uporabniku poleg pregleda zgodovinskih podatkov ponuditi tudi uporabne informacije o tem, kdaj in kako lahko učinkoviteje uporablja električno energijo.
 
-## Glavne funkcionalnosti
+## Načrtovane funkcionalnosti
 
 - prikaz zgodovinske porabe električne energije,
 - prikaz cen električne energije,
@@ -37,19 +37,36 @@ Podatki vsebujejo meritve porabe električne energije gospodinjstva v 15-minutni
 
 ### Open-Meteo
 
-Open-Meteo se uporablja za pridobivanje vremenskih podatkov.
-
-Uporabljeni bodo predvsem:
-- temperatura,
-- zgodovinski vremenski podatki,
-- aktualni vremenski podatki,
-- vremenska napoved.
+Open-Meteo se uporablja za pridobivanje zgodovinskih in napovednih podatkov o temperaturi ozračja.
 
 ### Electricity Maps
 
 Electricity Maps se uporablja za pridobivanje podatkov o ceni električne energije.
 
-Podatki o ceni se uporabijo za:
-- analizo zgodovinskih stroškov,
-- primerjavo cen po časovnih obdobjih,
-- pripravo priporočil za uporabo električne energije v ugodnejših obdobjih.
+### Zagon aplikacije
+
+Iz korenske mape projekta zaženemo program iz terminala z ukazom:
+
+```powershell
+.\.venv\Scripts\python.exe .\src\smart_home_energy\main.py
+```
+
+### Naloga 1
+
+Program prebere podatke iz XML-datotek v `src/smart_home_energy/data/`, prikaže uporabniku
+naslednje možnosti filtriranja:
+- Poraba elektrike nad izbrano vrednostjo
+- Cena elektrike nad izbrano vrednostjo
+- Temperatura pod izbrano vrednostjo
+- Meritve v izbranem časovnem obdobju
+
+Po vnešenih kriterijih se podatki prikažejo v konzoli v obliki tabele in rezultati shranijo v JSON in XML datoteki:
+
+```text
+src/smart_home_energy/data/filtrirano/filtrirano.json
+src/smart_home_energy/data/filtrirano/filtrirano.xml
+```
+
+Trenutno shranjeni rezultati vsebujejo vse meritve, pri katerih je temperatura nižja od −7 °C.
+
+
