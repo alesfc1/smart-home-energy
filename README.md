@@ -48,12 +48,12 @@ Electricity Maps se uporablja za pridobivanje podatkov o ceni električne energi
 Iz korenske mape projekta zaženemo program iz terminala z ukazom:
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\smart_home_energy\main.py
+.\.venv\Scripts\python.exe .\src\smart_home_energy\naloga1\main.py
 ```
 
 ### Naloga 1
 
-Program prebere podatke iz XML-datotek v `src/smart_home_energy/data/`, prikaže uporabniku
+Program prebere podatke iz XML-datotek v `src/smart_home_energy/naloga1/data/`, prikaže uporabniku
 naslednje možnosti filtriranja:
 - Poraba elektrike nad izbrano vrednostjo
 - Cena elektrike nad izbrano vrednostjo
@@ -63,8 +63,8 @@ naslednje možnosti filtriranja:
 Po vnešenih kriterijih se podatki prikažejo v konzoli v obliki tabele in rezultati shranijo v JSON in XML datoteki:
 
 ```text
-src/smart_home_energy/data/filtrirano/filtrirano.json
-src/smart_home_energy/data/filtrirano/filtrirano.xml
+src/smart_home_energy/naloga1/data/filtrirano/filtrirano.json
+src/smart_home_energy/naloga1/data/filtrirano/filtrirano.xml
 ```
 
 Trenutno shranjeni rezultati vsebujejo vse meritve, pri katerih je temperatura nižja od −7 °C.
