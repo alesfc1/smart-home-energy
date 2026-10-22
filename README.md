@@ -45,6 +45,12 @@ Electricity Maps se uporablja za pridobivanje podatkov o ceni električne energi
 
 ### Zagon aplikacije
 
+Kloniramo repozitorij:
+
+```powershell
+git clone https://github.com/alesfc1/smart-home-energy.git
+```
+
 Iz korenske mape projekta zaženemo program iz terminala z ukazom:
 
 ```powershell
@@ -69,4 +75,35 @@ src/smart_home_energy/naloga1/data/filtrirano/filtrirano.xml
 
 Trenutno shranjeni rezultati vsebujejo vse meritve, pri katerih je temperatura nižja od −7 °C.
 
+Program testiramo z ukazom: 
 
+```powershell
+.\.venv\Scripts\python.exe .\src\smart_home_energy\naloga1\main.py
+```
+
+### Naloga 2 - Parser
+
+Selenium parser pridobi podatke o aktualnih povprečnih cenah električne energije za današnji in naslednji dan iz spletne strani: https://euenergy.live/slovenia. 
+
+Podatki se shranijo v JSON datoteko:
+
+```text
+src/smart_home_energy/naloga2/data/parsed_recent_prices.json
+```
+
+Hkrati parser podatke shrani tudi v podatkovno bazo SQLite, ki jo ustvarimo z ukazom:
+
+```powershell
+.\.venv\Scripts\python.exe .\src\smart_home_energy\data\database\database.py
+```
+
+Preden zaženemo parser, moramo namestiti odvisnosti:
+```powershell
+python -m pip install selenium tzdata
+```
+
+Parser zaženemo z ukazom:
+
+```powershell
+.\.venv\Scripts\python.exe .\src\smart_home_energy\naloga2\parsing.py
+```
