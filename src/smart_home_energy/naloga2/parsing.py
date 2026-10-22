@@ -153,13 +153,6 @@ def save_prices(records: list[dict[str, object]]) -> None:
     # Shranjevanje v SQLite bazo
     try:
         with sqlite3.connect(DB_PATH) as conn:
-            conn.execute("""
-                CREATE TABLE IF NOT EXISTS recent_prices(
-                    date TEXT PRIMARY KEY,
-                    price REAL NOT NULL,
-                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-                )
-            """)
 
             updated_at = datetime.now(SLOVENIA_TIMEZONE).replace(microsecond=0).isoformat(sep=" ")
 
@@ -187,7 +180,6 @@ def save_prices(records: list[dict[str, object]]) -> None:
             f"{record['date']}: "
             f"{record['price']} EUR/kWh"
         )
-
 
 if __name__ == "__main__":
     save_prices(scrape_prices())
