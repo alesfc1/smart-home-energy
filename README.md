@@ -107,3 +107,21 @@ Parser zaženemo z ukazom:
 ```powershell
 .\.venv\Scripts\python.exe .\src\smart_home_energy\naloga2\parsing.py
 ```
+
+### Naloga 3 - Odprti podatki
+
+Namestimo odvisnosti:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install pandas fastapi uvicorn
+```
+
+Zaženemo FastAPI strežnik:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn smart_home_energy.api:app --reload
+```
+
+V brskalniku odpremo `http://127.0.0.1:8000/`. Stran ob nalaganju
+dinamično pridobi najnovejše podatke iz PX vira, jih filtrira in prikaže
+v interaktivnem grafu Chart.js.
