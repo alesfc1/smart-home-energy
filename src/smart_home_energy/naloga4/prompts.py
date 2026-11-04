@@ -6,7 +6,7 @@ import json
 
 
 def create_prompt(period: str, goal: str, measurements: list[dict]) -> str:
-    """Izbere obdobje in pripravi agregate iz meritev Naloge 1."""
+    """Izbere obdobje, pripravi agregate iz meritev Naloge 1 in poda urne meritve."""
     if period == "2025":
         start, end = date(2025, 1, 1), date(2026, 1, 1)
     else:
@@ -34,6 +34,17 @@ def create_prompt(period: str, goal: str, measurements: list[dict]) -> str:
         r["porabaKWh"] * r["cenaEURKWh"] for r in selected
         if r.get("porabaKWh") is not None and r.get("cenaEURKWh") is not None
     )
+    hourly = [
+        [
+            row.get("datum"),
+            row.get("ura"),
+            round(row["porabaKWh"], 3) if row.get("porabaKWh") is not None else None,
+            round(row["cenaEURKWh"], 5) if row.get("cenaEURKWh") is not None else None,
+            round(row["temperatura"], 1) if row.get("temperatura") is not None else None,
+        ]
+        for row in selected
+    ]
+
     context = {
         "obdobje": period,
         "stevilo_meritev": len(selected),
@@ -54,8 +65,12 @@ def create_prompt(period: str, goal: str, measurements: list[dict]) -> str:
             "maksimum": round(max(temperatures), 1) if temperatures else None,
         },
         "dnevna_poraba_kWh": {day: round(value, 3) for day, value in sorted(daily.items())},
+        "urne_meritve": {
+            "stolpci": ["datum", "ura", "poraba_kWh", "cena_EUR_na_kWh", "temperatura_C"],
+            "vrednosti": hourly,
+        },
     }
-    return f"""Si slovenski energetski svetovalec. Analiziraj dejanske meritve Naloge 1.
+    return f"""Si slovenski energetski svetovalec. Analiziraj dejanske urne meritve gospodinjstva.
 Poraba je v kWh, cena v EUR/kWh, temperatura v °C. Ocenjeni strošek je vsota
 porabe, pomnožene s pripadajočo ceno.
 
@@ -67,6 +82,6 @@ Vrni izključno veljaven JSON oblike:
 {{"summary":"...","consumption_analysis":"...","weather_impact":"...",
 "recommendations":[{{"title":"...","description":"...","priority":"low|medium|high"}}],
 "conclusion":"..."}}
-Piši v slovenščini. Ne izmišljaj si podatkov. Če vpliva vremena ni mogoče
-ugotoviti zgolj iz agregatov, to jasno povej. Priporočila prilagodi cilju.
+Piši v slovenščini. Ne izmišljaj si podatkov. Če
+ugotovitev ni mogoča to jasno povej. Priporočila prilagodi cilju.
 """
