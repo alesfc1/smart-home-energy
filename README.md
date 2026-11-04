@@ -142,6 +142,12 @@ v interaktivnem grafu Chart.js.
 
 ### Naloga 4 - Uporaba LLM
 
+Namestimo odvisnosti:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install openai python-dotenv
+```
+
 V `.env` dodamo API ključ ponudnika OpenRouter:
 
 ```dotenv
