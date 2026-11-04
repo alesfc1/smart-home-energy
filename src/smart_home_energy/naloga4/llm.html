@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="sl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Energetski svetovalec z umetno inteligenco</title>
+    <style>
+        :root { color-scheme: light; font-family: system-ui, sans-serif; color: #17324d; background: #f3f7fa; }
+        body { max-width: 900px; margin: 2rem auto; padding: 0 1rem 3rem; }
+        a { color: #1769aa; } .card { background: white; border: 1px solid #dbe5ed; border-radius: 12px; padding: 1.25rem; margin: 1rem 0; }
+        form { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+        label { display: grid; gap: .4rem; font-weight: 600; } select, button { font: inherit; padding: .65rem; border-radius: 7px; border: 1px solid #b8c8d5; }
+        button { color: white; background: #1769aa; border: 0; cursor: pointer; font-weight: 650; } button:disabled { opacity: .6; cursor: wait; }
+        #status { min-height: 1.5rem; } .recommendation { border-left: 4px solid #1769aa; padding: .2rem 1rem; margin: 1rem 0; }
+        .priority { font-size: .85rem; color: #52687a; } .error { color: #a12626; }
+    </style>
+</head>
+<body>
+    <p><a href="/">← Pregled porabe</a></p>
+    <h1>Energetski svetovalec</h1>
+    <p>Izberite obdobje in cilj. Model bo pripravil analizo na podlagi meritev porabe, cen in vremena iz Naloge 1.</p>
+    <section class="card">
+        <form id="analysis-form">
+            <label>Obdobje analize
+                <select id="period" required>
+                    <option value="2025-01">Januar 2025</option><option value="2025-02">Februar 2025</option>
+                    <option value="2025-03">Marec 2025</option><option value="2025-04">April 2025</option>
+                    <option value="2025-05">Maj 2025</option><option value="2025-06">Junij 2025</option>
+                    <option value="2025-07">Julij 2025</option><option value="2025-08">Avgust 2025</option>
+                    <option value="2025-09">September 2025</option><option value="2025-10">Oktober 2025</option>
+                    <option value="2025-11">November 2025</option><option value="2025-12">December 2025</option>
+                    <option value="2025">Celotno leto 2025</option>
+                </select>
+            </label>
+            <label>Cilj analize
+                <select id="goal" required>
+                    <option value="Zmanjšanje stroškov">Zmanjšanje stroškov</option>
+                    <option value="Zmanjšanje porabe">Zmanjšanje porabe</option>
+                    <option value="Analiza vpliva vremena">Analiza vpliva vremena</option>
+                </select>
+            </label>
+            <button id="submit-button" type="submit">Pripravi analizo</button>
+        </form>
+    </section>
+    <p id="status" role="status" aria-live="polite"></p>
+    <section id="result" aria-live="polite"></section>
+    <script>
+        const form = document.getElementById("analysis-form");
+        const status = document.getElementById("status");
+        const result = document.getElementById("result");
+        const button = document.getElementById("submit-button");
+
+        function addParagraph(parent, heading, text) {
+            const section = document.createElement("section");
+            section.className = "card";
+            const title = document.createElement("h2"); title.textContent = heading;
+            const body = document.createElement("p"); body.textContent = text;
+            section.append(title, body); parent.append(section);
+        }
+
+        function renderAnalysis(data) {
+            result.replaceChildren();
+            addParagraph(result, "Povzetek", data.summary);
+            addParagraph(result, "Analiza porabe", data.consumption_analysis);
+            addParagraph(result, "Vpliv vremena", data.weather_impact);
+            const recommendations = document.createElement("section"); recommendations.className = "card";
+            const title = document.createElement("h2"); title.textContent = "Priporočila"; recommendations.append(title);
+            data.recommendations.forEach((item) => {
+                const article = document.createElement("article"); article.className = "recommendation";
+                const name = document.createElement("h3"); name.textContent = item.title;
+                const description = document.createElement("p"); description.textContent = item.description;
+                const priority = document.createElement("p"); priority.className = "priority";
+                priority.textContent = `Prioriteta: ${item.priority}`;
+                article.append(name, description, priority); recommendations.append(article);
+            });
+            result.append(recommendations);
+            addParagraph(result, "Sklep", data.conclusion);
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault(); result.replaceChildren(); button.disabled = true;
+            status.className = ""; status.textContent = "Analiziram podatke …";
+            try {
+                const response = await fetch("/api/ai-analysis", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ period: document.getElementById("period").value, goal: document.getElementById("goal").value }),
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.detail || "Analize ni bilo mogoče pripraviti.");
+                renderAnalysis(data); status.textContent = "Analiza je pripravljena.";
+            } catch (error) {
+                status.className = "error"; status.textContent = error.message;
+            } finally { button.disabled = false; }
+        });
+    </script>
+</body>
+</html>

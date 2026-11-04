@@ -59,6 +59,20 @@ Iz korenske mape projekta zaženemo program iz terminala z ukazom:
 
 ### Naloga 1
 
+XML datoteke ustvarimo iz surovih podatkov z ukazom:
+
+```powershell
+.\.venv\Scripts\python.exe .\src\smart_home_energy\naloga1\generate_xml.py
+```
+
+Skripta generate_xml.py predprocesira izvorne podatke in vsake štiri 15-minutne intervale porabe sešteje v urno porabo in jo po datumu
+ter uri poveže s ceno in temperaturo. 
+
+Ustvari naslednje XML datoteke: 
+- `poraba.xml` (vsebuje 2 manjkajoči vrednosti pri meritvi P8016 in P8760)
+- `cene.xml`
+- `vreme.xml`
+
 Program prebere podatke iz XML-datotek v `src/smart_home_energy/naloga1/data/`, prikaže uporabniku
 naslednje možnosti filtriranja:
 - Poraba elektrike nad izbrano vrednostjo
@@ -125,3 +139,25 @@ Zaženemo FastAPI strežnik:
 V brskalniku odpremo `http://127.0.0.1:8000/`. Stran ob nalaganju
 dinamično pridobi najnovejše podatke iz PX vira, jih filtrira in prikaže
 v interaktivnem grafu Chart.js.
+
+### Naloga 4 - Uporaba LLM
+
+V `.env` dodamo API ključ ponudnika OpenRouter:
+
+```dotenv
+OPENROUTER_API_KEY=vaš_API_ključ
+```
+
+Zaženemo FastAPI strežnik:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn smart_home_energy.api:app --reload
+```
+
+Odpremo `http://127.0.0.1:8000/llm`.
+
+Stran omogoča izbiro meseca ali celega leta 2025 ter 
+ponudi možnosti za cilj analize:
+- zmanjšanje stroškov
+- zmanjšanje porabe
+- analiza vpliva vremena

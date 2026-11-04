@@ -111,7 +111,8 @@ def filtriraj_podatke(podatki):
 
         filtrirani = [
             zapis for zapis in podatki
-            if zapis["porabaKWh"] > meja
+            if zapis["porabaKWh"] is not None
+            and zapis["porabaKWh"] > meja
         ]
 
     elif izbira == "2":
@@ -119,7 +120,8 @@ def filtriraj_podatke(podatki):
 
         filtrirani = [
             zapis for zapis in podatki
-            if zapis["cenaEURKWh"] > meja
+            if zapis["cenaEURKWh"] is not None
+            and zapis["cenaEURKWh"] > meja
         ]
 
     elif izbira == "3":
@@ -166,17 +168,21 @@ def izpisi_tabelo(podatki):
 
     for zapis in podatki:
         temperatura = zapis["temperatura"]
+        poraba = zapis["porabaKWh"]
+        cena = zapis["cenaEURKWh"]
 
         if temperatura is None:
             temperatura_izpis = "Ni podatka"
         else:
             temperatura_izpis = f"{temperatura:.1f}"
+        poraba_izpis = f"{poraba:.3f}" if poraba is not None else "Ni podatka"
+        cena_izpis = f"{cena:.5f}" if cena is not None else "Ni podatka"
 
         print(
             f"{zapis['datum']:<12} "
             f"{zapis['ura']:<7} "
-            f"{zapis['porabaKWh']:>14.3f} "
-            f"{zapis['cenaEURKWh']:>17.5f} "
+            f"{poraba_izpis:>14} "
+            f"{cena_izpis:>17} "
             f"{temperatura_izpis:>19}"
         )
 

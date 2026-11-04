@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="sl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Poraba električne energije v gospodinjstvih</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 2rem auto; max-width: 1100px; padding: 0 1rem; }
+        form { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 2rem; }
+        label { display: grid; gap: .35rem; font-weight: 600; }
+        select, button { font: inherit; padding: .5rem; }
+        button { align-self: end; cursor: pointer; }
+        #status { min-height: 1.5rem; }
+        .chart-container { height: 55vh; min-height: 320px; }
+    </style>
+</head>
+<body>
+    <h1>Poraba električne energije v gospodinjstvih</h1>
+    <p><a href="/llm">Odpri AI energetsko analizo →</a></p>
+    <p id="status">Pridobivanje najnovejših podatkov ...</p>
+
+    <form id="filters">
+        <label>
+            Občina
+            <select id="municipality"></select>
+        </label>
+        <label>
+            Od meseca
+            <select id="start-month"></select>
+        </label>
+        <label>
+            Do meseca
+            <select id="end-month"></select>
+        </label>
+        <button type="submit">Posodobi graf</button>
+    </form>
+
+    <div class="chart-container">
+        <canvas id="consumption-chart"></canvas>
+    </div>
+
+    <script>
+        let chart;
+
+        const elements = {
+            form: document.getElementById("filters"),
+            municipality: document.getElementById("municipality"),
+            startMonth: document.getElementById("start-month"),
+            endMonth: document.getElementById("end-month"),
+            status: document.getElementById("status"),
+        };
+
+        function addOptions(select, values, includeAll = false) {
+            select.replaceChildren();
+            if (includeAll) {
+                select.add(new Option("Vse", ""));
+            }
+            values.forEach((value) => select.add(new Option(value, value)));
+        }
+
+        async function fetchJson(url) {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Strežnik je vrnil napako ${response.status}.`);
+            }
+            return response.json();
+        }
+
+        async function loadFilters() {
+            const options = await fetchJson("/api/metadata");
+            addOptions(elements.municipality, options.municipalities);
+            addOptions(elements.startMonth, options.months);
+            addOptions(elements.endMonth, options.months);
+
+            elements.municipality.value = "SLOVENIJA";
+            elements.startMonth.value = options.months[0] || "";
+            elements.endMonth.value = options.months.at(-1) || "";
+        }
+
+        async function loadChart() {
+            const params = new URLSearchParams({
+                municipality: elements.municipality.value,
+                consumer_type: "Gospodinjstva",
+                start_month: elements.startMonth.value,
+                end_month: elements.endMonth.value,
+            });
+            const data = await fetchJson(`/api/consumption?${params}`);
+            const labels = data.map((item) => item.month);
+            const values = data.map((item) => item.value);
+
+            if (chart) chart.destroy();
+            chart = new Chart(document.getElementById("consumption-chart"), {
+                type: "line",
+                data: {
+                    labels,
+                    datasets: [{
+                        label: "Poraba (kWh)",
+                        data: values,
+                        borderColor: "#1769aa",
+                        backgroundColor: "rgba(23, 105, 170, .15)",
+                        fill: true,
+                        tension: .25,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } },
+                },
+            });
+            elements.status.textContent = `${data.length} mesečnih vrednosti`;
+        }
+
+        elements.form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            elements.status.textContent = "Posodabljanje grafa ...";
+            try {
+                await loadChart();
+            } catch (error) {
+                elements.status.textContent = error.message;
+            }
+        });
+
+        // Podatki in možnosti filtrov se pridobijo dinamično ob vsakem
+        // nalaganju strani, ne iz statično shranjene kopije.
+        (async () => {
+            try {
+                await loadFilters();
+                await loadChart();
+            } catch (error) {
+                elements.status.textContent = error.message;
+            }
+        })();
+    </script>
+</body>
+</html>

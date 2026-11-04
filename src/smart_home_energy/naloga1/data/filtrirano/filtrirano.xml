@@ -4,7 +4,7 @@
         <id>P1152</id>
         <datum>2025-02-17</datum>
         <ura>23:00</ura>
-        <porabaKWh>0.032</porabaKWh>
+        <porabaKWh>0.116</porabaKWh>
         <temperatura>-7.1</temperatura>
         <cenaEURKWh>0.1356</cenaEURKWh>
     </meritev>
@@ -12,7 +12,7 @@
         <id>P1153</id>
         <datum>2025-02-18</datum>
         <ura>00:00</ura>
-        <porabaKWh>0.024</porabaKWh>
+        <porabaKWh>0.18</porabaKWh>
         <temperatura>-8.6</temperatura>
         <cenaEURKWh>0.13155</cenaEURKWh>
     </meritev>
@@ -20,7 +20,7 @@
         <id>P1154</id>
         <datum>2025-02-18</datum>
         <ura>01:00</ura>
-        <porabaKWh>0.005</porabaKWh>
+        <porabaKWh>0.018</porabaKWh>
         <temperatura>-9.5</temperatura>
         <cenaEURKWh>0.12589</cenaEURKWh>
     </meritev>
@@ -28,7 +28,7 @@
         <id>P1155</id>
         <datum>2025-02-18</datum>
         <ura>02:00</ura>
-        <porabaKWh>0.004</porabaKWh>
+        <porabaKWh>0.017</porabaKWh>
         <temperatura>-9.6</temperatura>
         <cenaEURKWh>0.12229</cenaEURKWh>
     </meritev>
@@ -36,7 +36,7 @@
         <id>P1160</id>
         <datum>2025-02-18</datum>
         <ura>07:00</ura>
-        <porabaKWh>0.045</porabaKWh>
+        <porabaKWh>0.369</porabaKWh>
         <temperatura>-7.4</temperatura>
         <cenaEURKWh>0.1938</cenaEURKWh>
     </meritev>
@@ -44,7 +44,7 @@
         <id>P1161</id>
         <datum>2025-02-18</datum>
         <ura>08:00</ura>
-        <porabaKWh>0.307</porabaKWh>
+        <porabaKWh>0.627</porabaKWh>
         <temperatura>-7.5</temperatura>
         <cenaEURKWh>0.16</cenaEURKWh>
     </meritev>
@@ -52,7 +52,7 @@
         <id>P1182</id>
         <datum>2025-02-19</datum>
         <ura>05:00</ura>
-        <porabaKWh>0.004</porabaKWh>
+        <porabaKWh>0.017</porabaKWh>
         <temperatura>-7.1</temperatura>
         <cenaEURKWh>0.16506</cenaEURKWh>
     </meritev>
@@ -60,7 +60,7 @@
         <id>P1183</id>
         <datum>2025-02-19</datum>
         <ura>06:00</ura>
-        <porabaKWh>0.004</porabaKWh>
+        <porabaKWh>0.758</porabaKWh>
         <temperatura>-8.8</temperatura>
         <cenaEURKWh>0.19578</cenaEURKWh>
     </meritev>
@@ -68,7 +68,7 @@
         <id>P1184</id>
         <datum>2025-02-19</datum>
         <ura>07:00</ura>
-        <porabaKWh>0.395</porabaKWh>
+        <porabaKWh>0.712</porabaKWh>
         <temperatura>-9.5</temperatura>
         <cenaEURKWh>0.17498</cenaEURKWh>
     </meritev>
@@ -76,7 +76,7 @@
         <id>P1185</id>
         <datum>2025-02-19</datum>
         <ura>08:00</ura>
-        <porabaKWh>0.172</porabaKWh>
+        <porabaKWh>0.314</porabaKWh>
         <temperatura>-9.8</temperatura>
         <cenaEURKWh>0.15076</cenaEURKWh>
     </meritev>
@@ -84,7 +84,7 @@
         <id>P1186</id>
         <datum>2025-02-19</datum>
         <ura>09:00</ura>
-        <porabaKWh>0.029</porabaKWh>
+        <porabaKWh>0.135</porabaKWh>
         <temperatura>-8.3</temperatura>
         <cenaEURKWh>0.11426</cenaEURKWh>
     </meritev>
@@ -92,7 +92,7 @@
         <id>P1201</id>
         <datum>2025-02-20</datum>
         <ura>00:00</ura>
-        <porabaKWh>0.03</porabaKWh>
+        <porabaKWh>0.093</porabaKWh>
         <temperatura>-7.3</temperatura>
         <cenaEURKWh>0.11791</cenaEURKWh>
     </meritev>
@@ -100,7 +100,7 @@
         <id>P1202</id>
         <datum>2025-02-20</datum>
         <ura>01:00</ura>
-        <porabaKWh>0.005</porabaKWh>
+        <porabaKWh>0.018</porabaKWh>
         <temperatura>-7.6</temperatura>
         <cenaEURKWh>0.11442</cenaEURKWh>
     </meritev>
@@ -108,7 +108,7 @@
         <id>P1203</id>
         <datum>2025-02-20</datum>
         <ura>02:00</ura>
-        <porabaKWh>0.004</porabaKWh>
+        <porabaKWh>0.018</porabaKWh>
         <temperatura>-8.1</temperatura>
         <cenaEURKWh>0.11003</cenaEURKWh>
     </meritev>
@@ -116,7 +116,7 @@
         <id>P1204</id>
         <datum>2025-02-20</datum>
         <ura>03:00</ura>
-        <porabaKWh>0.004</porabaKWh>
+        <porabaKWh>0.017</porabaKWh>
         <temperatura>-9.9</temperatura>
         <cenaEURKWh>0.11751</cenaEURKWh>
     </meritev>
@@ -124,7 +124,7 @@
         <id>P1205</id>
         <datum>2025-02-20</datum>
         <ura>04:00</ura>
-        <porabaKWh>0.012</porabaKWh>
+        <porabaKWh>0.273</porabaKWh>
         <temperatura>-10.1</temperatura>
         <cenaEURKWh>0.14201</cenaEURKWh>
     </meritev>
@@ -132,7 +132,7 @@
         <id>P1206</id>
         <datum>2025-02-20</datum>
         <ura>05:00</ura>
-        <porabaKWh>0.028</porabaKWh>
+        <porabaKWh>0.053</porabaKWh>
         <temperatura>-10.1</temperatura>
         <cenaEURKWh>0.17351</cenaEURKWh>
     </meritev>
@@ -140,7 +140,7 @@
         <id>P1207</id>
         <datum>2025-02-20</datum>
         <ura>06:00</ura>
-        <porabaKWh>0.004</porabaKWh>
+        <porabaKWh>0.651</porabaKWh>
         <temperatura>-10.1</temperatura>
         <cenaEURKWh>0.21671</cenaEURKWh>
     </meritev>
@@ -148,7 +148,7 @@
         <id>P1208</id>
         <datum>2025-02-20</datum>
         <ura>07:00</ura>
-        <porabaKWh>0.354</porabaKWh>
+        <porabaKWh>0.732</porabaKWh>
         <temperatura>-10.0</temperatura>
         <cenaEURKWh>0.1785</cenaEURKWh>
     </meritev>
@@ -156,7 +156,7 @@
         <id>P1209</id>
         <datum>2025-02-20</datum>
         <ura>08:00</ura>
-        <porabaKWh>0.185</porabaKWh>
+        <porabaKWh>0.328</porabaKWh>
         <temperatura>-9.9</temperatura>
         <cenaEURKWh>0.12089</cenaEURKWh>
     </meritev>
@@ -164,7 +164,7 @@
         <id>P1210</id>
         <datum>2025-02-20</datum>
         <ura>09:00</ura>
-        <porabaKWh>0.031</porabaKWh>
+        <porabaKWh>0.114</porabaKWh>
         <temperatura>-8.2</temperatura>
         <cenaEURKWh>0.10608</cenaEURKWh>
     </meritev>
@@ -172,7 +172,7 @@
         <id>P8745</id>
         <datum>2025-12-31</datum>
         <ura>08:00</ura>
-        <porabaKWh>0.039</porabaKWh>
+        <porabaKWh>0.438</porabaKWh>
         <temperatura>-7.6</temperatura>
         <cenaEURKWh>0.0961</cenaEURKWh>
     </meritev>
@@ -180,7 +180,7 @@
         <id>P8746</id>
         <datum>2025-12-31</datum>
         <ura>09:00</ura>
-        <porabaKWh>0.047</porabaKWh>
+        <porabaKWh>0.34</porabaKWh>
         <temperatura>-8.4</temperatura>
         <cenaEURKWh>0.08955</cenaEURKWh>
     </meritev>

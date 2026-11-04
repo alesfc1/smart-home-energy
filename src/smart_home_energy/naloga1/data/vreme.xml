@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <vremena>
     <vreme id="V1">
         <datum>2025-01-01</datum>
@@ -69,11 +70,10 @@
         <ura>13:00</ura>
         <temperatura>6.7</temperatura>
     </vreme>
-    <!-- Manjkajoča vrednost -->
     <vreme id="V15">
         <datum>2025-01-01</datum>
         <ura>14:00</ura>
-        <temperatura></temperatura>
+        <temperatura>8.0</temperatura>
     </vreme>
     <vreme id="V16">
         <datum>2025-01-01</datum>

@@ -3,7 +3,7 @@
     "id": "P1152",
     "datum": "2025-02-17",
     "ura": "23:00",
-    "porabaKWh": 0.032,
+    "porabaKWh": 0.116,
     "temperatura": -7.1,
     "cenaEURKWh": 0.1356
   },
@@ -11,7 +11,7 @@
     "id": "P1153",
     "datum": "2025-02-18",
     "ura": "00:00",
-    "porabaKWh": 0.024,
+    "porabaKWh": 0.18,
     "temperatura": -8.6,
     "cenaEURKWh": 0.13155
   },
@@ -19,7 +19,7 @@
     "id": "P1154",
     "datum": "2025-02-18",
     "ura": "01:00",
-    "porabaKWh": 0.005,
+    "porabaKWh": 0.018,
     "temperatura": -9.5,
     "cenaEURKWh": 0.12589
   },
@@ -27,7 +27,7 @@
     "id": "P1155",
     "datum": "2025-02-18",
     "ura": "02:00",
-    "porabaKWh": 0.004,
+    "porabaKWh": 0.017,
     "temperatura": -9.6,
     "cenaEURKWh": 0.12229
   },
@@ -35,7 +35,7 @@
     "id": "P1160",
     "datum": "2025-02-18",
     "ura": "07:00",
-    "porabaKWh": 0.045,
+    "porabaKWh": 0.369,
     "temperatura": -7.4,
     "cenaEURKWh": 0.1938
   },
@@ -43,7 +43,7 @@
     "id": "P1161",
     "datum": "2025-02-18",
     "ura": "08:00",
-    "porabaKWh": 0.307,
+    "porabaKWh": 0.627,
     "temperatura": -7.5,
     "cenaEURKWh": 0.16
   },
@@ -51,7 +51,7 @@
     "id": "P1182",
     "datum": "2025-02-19",
     "ura": "05:00",
-    "porabaKWh": 0.004,
+    "porabaKWh": 0.017,
     "temperatura": -7.1,
     "cenaEURKWh": 0.16506
   },
@@ -59,7 +59,7 @@
     "id": "P1183",
     "datum": "2025-02-19",
     "ura": "06:00",
-    "porabaKWh": 0.004,
+    "porabaKWh": 0.758,
     "temperatura": -8.8,
     "cenaEURKWh": 0.19578
   },
@@ -67,7 +67,7 @@
     "id": "P1184",
     "datum": "2025-02-19",
     "ura": "07:00",
-    "porabaKWh": 0.395,
+    "porabaKWh": 0.712,
     "temperatura": -9.5,
     "cenaEURKWh": 0.17498
   },
@@ -75,7 +75,7 @@
     "id": "P1185",
     "datum": "2025-02-19",
     "ura": "08:00",
-    "porabaKWh": 0.172,
+    "porabaKWh": 0.314,
     "temperatura": -9.8,
     "cenaEURKWh": 0.15076
   },
@@ -83,7 +83,7 @@
     "id": "P1186",
     "datum": "2025-02-19",
     "ura": "09:00",
-    "porabaKWh": 0.029,
+    "porabaKWh": 0.135,
     "temperatura": -8.3,
     "cenaEURKWh": 0.11426
   },
@@ -91,7 +91,7 @@
     "id": "P1201",
     "datum": "2025-02-20",
     "ura": "00:00",
-    "porabaKWh": 0.03,
+    "porabaKWh": 0.093,
     "temperatura": -7.3,
     "cenaEURKWh": 0.11791
   },
@@ -99,7 +99,7 @@
     "id": "P1202",
     "datum": "2025-02-20",
     "ura": "01:00",
-    "porabaKWh": 0.005,
+    "porabaKWh": 0.018,
     "temperatura": -7.6,
     "cenaEURKWh": 0.11442
   },
@@ -107,7 +107,7 @@
     "id": "P1203",
     "datum": "2025-02-20",
     "ura": "02:00",
-    "porabaKWh": 0.004,
+    "porabaKWh": 0.018,
     "temperatura": -8.1,
     "cenaEURKWh": 0.11003
   },
@@ -115,7 +115,7 @@
     "id": "P1204",
     "datum": "2025-02-20",
     "ura": "03:00",
-    "porabaKWh": 0.004,
+    "porabaKWh": 0.017,
     "temperatura": -9.9,
     "cenaEURKWh": 0.11751
   },
@@ -123,7 +123,7 @@
     "id": "P1205",
     "datum": "2025-02-20",
     "ura": "04:00",
-    "porabaKWh": 0.012,
+    "porabaKWh": 0.273,
     "temperatura": -10.1,
     "cenaEURKWh": 0.14201
   },
@@ -131,7 +131,7 @@
     "id": "P1206",
     "datum": "2025-02-20",
     "ura": "05:00",
-    "porabaKWh": 0.028,
+    "porabaKWh": 0.053,
     "temperatura": -10.1,
     "cenaEURKWh": 0.17351
   },
@@ -139,7 +139,7 @@
     "id": "P1207",
     "datum": "2025-02-20",
     "ura": "06:00",
-    "porabaKWh": 0.004,
+    "porabaKWh": 0.651,
     "temperatura": -10.1,
     "cenaEURKWh": 0.21671
   },
@@ -147,7 +147,7 @@
     "id": "P1208",
     "datum": "2025-02-20",
     "ura": "07:00",
-    "porabaKWh": 0.354,
+    "porabaKWh": 0.732,
     "temperatura": -10.0,
     "cenaEURKWh": 0.1785
   },
@@ -155,7 +155,7 @@
     "id": "P1209",
     "datum": "2025-02-20",
     "ura": "08:00",
-    "porabaKWh": 0.185,
+    "porabaKWh": 0.328,
     "temperatura": -9.9,
     "cenaEURKWh": 0.12089
   },
@@ -163,7 +163,7 @@
     "id": "P1210",
     "datum": "2025-02-20",
     "ura": "09:00",
-    "porabaKWh": 0.031,
+    "porabaKWh": 0.114,
     "temperatura": -8.2,
     "cenaEURKWh": 0.10608
   },
@@ -171,7 +171,7 @@
     "id": "P8745",
     "datum": "2025-12-31",
     "ura": "08:00",
-    "porabaKWh": 0.039,
+    "porabaKWh": 0.438,
     "temperatura": -7.6,
     "cenaEURKWh": 0.0961
   },
@@ -179,7 +179,7 @@
     "id": "P8746",
     "datum": "2025-12-31",
     "ura": "09:00",
-    "porabaKWh": 0.047,
+    "porabaKWh": 0.34,
     "temperatura": -8.4,
     "cenaEURKWh": 0.08955
   }
