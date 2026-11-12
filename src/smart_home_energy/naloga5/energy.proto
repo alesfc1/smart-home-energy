@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package smart_home_energy;
+
+// Zahteva za izbiro obdobja
+message PeriodRequest {
+    string period = 1;
+}
+
+// Podatki o porabi za posamezno uro
+message ConsumptionPoint {
+    string date = 1;
+    string hour = 2;
+    double consumption_kwh = 3;
+    bool has_consumption = 8;
+
+    double temperature = 4;
+    bool has_temperature = 5;
+
+    double price_eur_kwh = 6;
+    bool has_price = 7;
+}
+
+// Odgovor s podatki o porabi
+message ConsumptionResponse {
+    repeated ConsumptionPoint measurements = 1;
+}
+
+// Statistika porabe
+message EnergyStatisticsResponse {
+    int32 measurement_count = 1;
+
+    double total_consumption_kwh = 2;
+    double average_consumption_kwh = 3;
+    double max_consumption_kwh = 4;
+    double min_consumption_kwh = 5;
+
+    double estimated_cost_eur = 6;
+}
+
+// Zahteva za najcenejše ure
+message CheapestHoursRequest {
+    string period = 1;
+    int32 limit = 2;
+}
+
+// Posamezna najcenejša ura
+message CheapestHour {
+    string date = 1;
+    string hour = 2;
+    double price_eur_kwh = 3;
+}
+
+// Odgovor z najcenejšimi urami
+message CheapestHoursResponse {
+    repeated CheapestHour hours = 1;
+}
+
+// Zahteva za streaming cen
+message PriceStreamRequest {
+    string period = 1;
+
+    // Časovni zamik med sporočili v milisekundah
+    int32 interval_ms = 2;
+}
+
+// Podatek o ceni elektrike
+message ElectricityPrice {
+    string date = 1;
+    string hour = 2;
+    double price_eur_kwh = 3;
+}
+
+// gRPC servis
+service EnergyService {
+
+    // 1. Pridobivanje porabe
+    rpc GetConsumption(PeriodRequest)
+        returns (ConsumptionResponse);
+
+    // 2. Pridobivanje statistike
+    rpc GetEnergyStatistics(PeriodRequest)
+        returns (EnergyStatisticsResponse);
+
+    // 3. Iskanje najcenejših ur
+    rpc GetCheapestHours(CheapestHoursRequest)
+        returns (CheapestHoursResponse);
+
+    // 4. Postopno pošiljanje cen
+    rpc StreamElectricityPrices(PriceStreamRequest)
+        returns (stream ElectricityPrice);
+}

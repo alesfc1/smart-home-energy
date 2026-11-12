@@ -167,3 +167,37 @@ ponudi možnosti za cilj analize:
 - zmanjšanje stroškov
 - zmanjšanje porabe
 - analiza vpliva vremena
+
+### Naloga 5 - gRPC
+
+Namestimo odvisnosti:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install grpcio grpcio-tools
+```
+
+Ustvarimo Python datoteki `energy_pb2.py` in `energy_pb2_grpc.py` iz protokolne datoteke `energy.proto`:
+
+```powershell
+.\.venv\Scripts\python.exe -m grpc_tools.protoc -I src --python_out=src --grpc_python_out=src src/smart_home_energy/naloga5/energy.proto
+```
+
+Zaženemo gRPC strežnik:
+
+```powershell
+.\.venv\Scripts\python.exe -m smart_home_energy.naloga5.server
+```
+
+V drugem terminalu zaženemo FastAPI aplikacijo, ki nastopa v vlogi gRPC klienta:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn smart_home_energy.api:app --reload
+```
+
+Nato odpremo `http://127.0.0.1:8000/grpc`, kjer izberemo obdobje in vrsto podatkov.
+
+Omogočen je prikaz naslednjih podatkov:
+- urna poraba
+- statistika
+- najcenejše ure
+- cene v realnem času (streaming) 

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="sl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Energetski podatki prek gRPC</title>
+    <style>
+        :root { color-scheme: light; font-family: system-ui, sans-serif; color: #17324d; background: #f3f7fa; }
+        body { max-width: 1000px; margin: 2rem auto; padding: 0 1rem 3rem; }
+        .card { background: white; border: 1px solid #dbe5ed; border-radius: 12px; padding: 1.25rem; margin: 1rem 0; }
+        form { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); align-items: end; }
+        label { display: grid; gap: .4rem; font-weight: 600; }
+        select, button { font: inherit; padding: .65rem; border-radius: 7px; border: 1px solid #b8c8d5; }
+        button { color: white; background: #1769aa; border: 0; cursor: pointer; font-weight: 650; }
+        button:disabled { opacity: .6; cursor: wait; }
+        #status { min-height: 1.5rem; } .error { color: #a12626; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { text-align: left; border-bottom: 1px solid #dbe5ed; padding: .55rem; }
+        .table-wrap { overflow-x: auto; max-height: 60vh; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .75rem; }
+    </style>
+</head>
+<body>
+    <p><a href="/">← Pregled projekta</a></p>
+    <h1>Energetski podatki prek gRPC</h1>
+    <p>Izberite obdobje in vrsto podatkov.</p>
+    <section class="card">
+        <form id="query-form">
+            <label>Obdobje
+                <select id="period">
+                    <option value="2025-01">Januar 2025</option><option value="2025-02">Februar 2025</option>
+                    <option value="2025-03">Marec 2025</option><option value="2025-04">April 2025</option>
+                    <option value="2025-05">Maj 2025</option><option value="2025-06">Junij 2025</option>
+                    <option value="2025-07">Julij 2025</option><option value="2025-08">Avgust 2025</option>
+                    <option value="2025-09">September 2025</option><option value="2025-10">Oktober 2025</option>
+                    <option value="2025-11">November 2025</option><option value="2025-12">December 2025</option>
+                    <option value="2025">Celotno leto 2025</option>
+                </select>
+            </label>
+            <label>Prikaz
+                <select id="operation">
+                    <option value="consumption">Urna poraba</option>
+                    <option value="statistics">Statistika</option>
+                    <option value="cheapest">Najcenejše ure</option>
+                    <option value="stream">Cene v realnem času (streaming)</option>
+                </select>
+            </label>
+            <button id="submit" type="submit">Pridobi podatke</button>
+        </form>
+    </section>
+    <p id="status" role="status" aria-live="polite"></p>
+    <section id="result" class="card" aria-live="polite" hidden></section>
+    <script>
+        const form = document.getElementById("query-form");
+        const period = document.getElementById("period");
+        const operation = document.getElementById("operation");
+        const button = document.getElementById("submit");
+        const status = document.getElementById("status");
+        const result = document.getElementById("result");
+        let stream;
+
+        function start(message) { if (stream) stream.close(); stream = null; result.replaceChildren(); result.hidden = false; status.className = ""; status.textContent = message; button.disabled = true; }
+        function finish(message) { status.textContent = message; button.disabled = false; }
+        function showError(message) { status.className = "error"; finish(message); }
+        function table(headers) {
+            const wrap = document.createElement("div"); wrap.className = "table-wrap";
+            const output = document.createElement("table");
+            const head = document.createElement("thead"); const row = document.createElement("tr");
+            headers.forEach((label) => { const th = document.createElement("th"); th.textContent = label; row.append(th); });
+            head.append(row); output.append(head);
+            const body = document.createElement("tbody"); output.append(body); wrap.append(output); result.append(wrap);
+            return body;
+        }
+        function appendRow(body, values) {
+            const row = document.createElement("tr");
+            values.forEach((value) => { const cell = document.createElement("td"); cell.textContent = value; row.append(cell); });
+            body.append(row);
+        }
+        async function getJson(url) {
+            const response = await fetch(url); const data = await response.json();
+            if (!response.ok) throw new Error(data.detail || "Podatkov ni bilo mogoče pridobiti.");
+            return data;
+        }
+        async function load() {
+            const p = encodeURIComponent(period.value);
+            if (operation.value === "consumption") {
+                start("Pridobivam meritve prek gRPC …");
+                const rows = await getJson(`/api/grpc/consumption?period=${p}`);
+                const body = table(["Datum", "Ura", "Poraba (kWh)", "Temperatura (°C)", "Cena (EUR/kWh)"]);
+                rows.forEach((item) => appendRow(body, [item.date, item.hour,
+                    item.consumption_kwh == null ? "Ni podatka" : item.consumption_kwh.toFixed(3),
+                    item.temperature == null ? "Ni podatka" : item.temperature.toFixed(1),
+                    item.price_eur_kwh == null ? "Ni podatka" : item.price_eur_kwh.toFixed(5)]));
+                finish(`Prejetih ${rows.length} meritev prek gRPC.`);
+            } else if (operation.value === "statistics") {
+                start("Pridobivam statistiko prek gRPC …");
+                const stats = await getJson(`/api/grpc/statistics?period=${p}`);
+                const labels = [["Meritve", stats.measurement_count], ["Skupna poraba", `${stats.total_consumption_kwh.toFixed(2)} kWh`],
+                    ["Povprečna poraba", `${stats.average_consumption_kwh.toFixed(3)} kWh`], ["Največja poraba", `${stats.max_consumption_kwh.toFixed(3)} kWh`],
+                    ["Najmanjša poraba", `${stats.min_consumption_kwh.toFixed(3)} kWh`], ["Ocenjeni strošek", `${stats.estimated_cost_eur.toFixed(2)} EUR`]];
+                const grid = document.createElement("div"); grid.className = "stats";
+                labels.forEach(([name, value]) => { const item = document.createElement("p"); item.textContent = `${name}: ${value}`; grid.append(item); });
+                result.append(grid); finish("Statistika je prejeta prek gRPC.");
+            } else if (operation.value === "cheapest") {
+                start("Iščem najcenejše ure prek gRPC …");
+                const rows = await getJson(`/api/grpc/cheapest?period=${p}&limit=10`);
+                const body = table(["Datum", "Ura", "Cena (EUR/kWh)"]);
+                rows.forEach((item) => appendRow(body, [item.date, item.hour, item.price_eur_kwh.toFixed(5)]));
+                finish(`Prejetih ${rows.length} najcenejših ur prek gRPC.`);
+            } else {
+                start("Vzpostavljam streaming cen prek gRPC …");
+                const body = table(["Datum", "Ura", "Cena (EUR/kWh)"]);
+                stream = new EventSource(`/api/grpc/stream?period=${p}&interval_ms=100`);
+                stream.onopen = () => { status.textContent = "Streaming je vzpostavljen; cene prihajajo sproti …"; };
+                stream.onmessage = (event) => {
+                    const item = JSON.parse(event.data);
+                    appendRow(body, [item.date, item.hour, item.price_eur_kwh.toFixed(5)]);
+                    status.textContent = `Sprejetih ${body.rows.length} cen …`;
+                };
+                stream.addEventListener("done", () => { stream.close(); stream = null; finish(`Streaming končan: ${body.rows.length} cen.`); });
+                stream.addEventListener("error", (event) => {
+                    if (event.data) { const data = JSON.parse(event.data); stream.close(); stream = null; showError(data.message); }
+                    else if (stream.readyState === EventSource.CLOSED) { stream = null; showError("Povezava za streaming se je zaprla."); }
+                });
+            }
+        }
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            try { await load(); } catch (cause) { showError(cause.message); }
+            finally { if (operation.value !== "stream" || !stream) button.disabled = false; }
+        });
+    </script>
+</body>
+</html>
