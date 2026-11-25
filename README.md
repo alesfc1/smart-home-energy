@@ -51,10 +51,10 @@ Kloniramo repozitorij:
 git clone https://github.com/alesfc1/smart-home-energy.git
 ```
 
-Iz korenske mape projekta zaženemo program iz terminala z ukazom:
+Ustvarimo podatkovno bazo SQLite z ukazom:
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\smart_home_energy\naloga1\main.py
+.\.venv\Scripts\python.exe .\src\smart_home_energy\data\database\database.py
 ```
 
 ### Naloga 1
@@ -68,12 +68,19 @@ XML datoteke ustvarimo iz surovih podatkov z ukazom:
 Skripta generate_xml.py predprocesira izvorne podatke in vsake štiri 15-minutne intervale porabe sešteje v urno porabo in jo po datumu
 ter uri poveže s ceno in temperaturo. 
 
-Ustvari naslednje XML datoteke: 
+Ustvarijo se naslednje XML datoteke: 
 - `poraba.xml` (vsebuje 2 manjkajoči vrednosti pri meritvi P8016 in P8760)
 - `cene.xml`
 - `vreme.xml`
 
-Program prebere podatke iz XML-datotek v `src/smart_home_energy/naloga1/data/`, prikaže uporabniku
+Podatki shranijo tudi v bazo v tabelo `hourly_measurements`.
+
+```powershell
+.\.venv\Scripts\python.exe .\src\smart_home_energy\data\database\database.py
+``` 
+ .
+
+Program prebere podatke iz XML-datotek v `src/smart_home_energy/naloga1/data/` in prikaže uporabniku
 naslednje možnosti filtriranja:
 - Poraba elektrike nad izbrano vrednostjo
 - Cena elektrike nad izbrano vrednostjo
@@ -105,11 +112,7 @@ Podatki se shranijo v JSON datoteko:
 src/smart_home_energy/naloga2/data/parsed_recent_prices.json
 ```
 
-Hkrati parser podatke shrani tudi v podatkovno bazo SQLite, ki jo ustvarimo z ukazom:
-
-```powershell
-.\.venv\Scripts\python.exe .\src\smart_home_energy\data\database\database.py
-```
+Hkrati parser podatke shrani v bazo v tabelo `recent_prices`.
 
 Preden zaženemo parser, moramo namestiti odvisnosti:
 ```powershell

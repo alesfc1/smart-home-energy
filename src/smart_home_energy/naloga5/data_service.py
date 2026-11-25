@@ -1,23 +1,18 @@
+import sqlite3
+from datetime import datetime
 from pathlib import Path
 
-from smart_home_energy.naloga1.main import (
-    read_vreme,
-    read_cene,
-    read_poraba,
-    zdruzi_podatke,
-)
 
-
-# Pot do obstoječih XML datotek
-DATA_DIR = (
+DB_PATH = (
     Path(__file__).resolve().parents[1]
-    / "naloga1"
     / "data"
+    / "database"
+    / "smart-home-energy.db"
 )
 
 
 class DataUnavailableError(ValueError):
-    """Raised when a valid period has no usable source data."""
+    """Pojavi se, kadar podatki v bazi še niso na voljo."""
 
 
 def validate_period(period: str) -> None:
@@ -35,19 +30,48 @@ def validate_period(period: str) -> None:
 
 
 def load_data():
-    """Prebere XML datoteke in združi podatke."""
+    """Prebere in vrne urne energetske meritve iz SQLite baze."""
+    try:
+        with sqlite3.connect(DB_PATH) as connection:
+            rows = connection.execute("""
+                SELECT timestamp, consumption_kwh, price_eur_kwh, temperature
+                FROM hourly_measurements
+                ORDER BY timestamp
+            """).fetchall()
+    except sqlite3.Error as error:
+        raise DataUnavailableError(
+            "Urne meritve v podatkovni bazi niso na voljo."
+        ) from error
 
-    vremena = read_vreme(DATA_DIR / "vreme.xml")
-    cene = read_cene(DATA_DIR / "cene.xml")
-    porabe = read_poraba(DATA_DIR / "poraba.xml")
+    if not rows:
+        raise DataUnavailableError(
+            "Podatkovna baza še ne vsebuje urnih meritev."
+        )
 
-    return zdruzi_podatke(vremena, cene, porabe)
+    records = []
+    for timestamp, consumption, price, temperature in rows:
+        moment = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+        records.append({
+            "datum": moment.strftime("%Y-%m-%d"),
+            "ura": moment.strftime("%H:00"),
+            "porabaKWh": consumption,
+            "cenaEURKWh": price,
+            "temperatura": temperature,
+        })
+
+    return records
 
 
 def load_prices():
-    """Prebere urne cene elektrike."""
-
-    return read_cene(DATA_DIR / "cene.xml")
+    """Vrne urne cene iz meritev v SQLite bazi."""
+    return [
+        {
+            "datum": record["datum"],
+            "ura": record["ura"],
+            "cenaEURKWh": record["cenaEURKWh"],
+        }
+        for record in load_data()
+    ]
 
 
 def filter_period(records: list, period: str) -> list:

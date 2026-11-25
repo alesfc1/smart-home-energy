@@ -10,12 +10,7 @@ from pydantic import BaseModel
 from smart_home_energy.naloga4.prompts import create_prompt
 from smart_home_energy.naloga4.llm_service import analyze_energy
 from smart_home_energy.naloga5 import energy_pb2, energy_pb2_grpc
-from smart_home_energy.naloga1.main import (
-    read_vreme,
-    read_cene,
-    read_poraba,
-    zdruzi_podatke,
-)
+from smart_home_energy.naloga5.data_service import load_data
 
 app = FastAPI()
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -72,13 +67,7 @@ def ai_analysis(request: AnalysisRequest):
         raise HTTPException(status_code=400, detail="Izberi veljaven cilj analize.")
 
     try:
-        data_dir = PROJECT_DIR / "naloga1" / "data"
-        measurements = zdruzi_podatke(
-            read_vreme(data_dir / "vreme.xml"),
-            read_cene(data_dir / "cene.xml"),
-            read_poraba(data_dir / "poraba.xml"),
-        )
-        prompt = create_prompt(request.period, request.goal, measurements)
+        prompt = create_prompt(request.period, request.goal, load_data())
         return analyze_energy(prompt)
     except (OSError, ValueError) as error:
         raise HTTPException(status_code=503, detail=f"Analize ni bilo mogoče pripraviti: {error}") from error

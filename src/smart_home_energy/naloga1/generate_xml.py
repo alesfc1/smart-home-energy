@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import csv
 import json
+import sqlite3
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -15,6 +16,7 @@ import xml.etree.ElementTree as ET
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 RAW_DIR = PROJECT_DIR / "data" / "data-sources" / "raw"
 OUTPUT_DIR = Path(__file__).resolve().parent / "data"
+DATABASE_PATH = PROJECT_DIR / "data" / "database" / "smart-home-energy.db"
 
 
 def _hour_key(value: str) -> tuple[str, str]:
@@ -95,6 +97,40 @@ def _write_xml(path: Path, root: ET.Element) -> None:
     ET.ElementTree(root).write(path, encoding="utf-8", xml_declaration=True)
 
 
+def _insert_measurements_in_db(
+    ordered_keys: list[tuple[str, str]],
+    consumption: dict[tuple[str, str], float | None],
+    prices: dict[tuple[str, str], float],
+    weather: dict[tuple[str, str], float],
+) -> None:
+    """Vstavi urne meritve v bazo"""
+    DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    rows = [
+        (
+            f"{day}T{hour[:2]}:00:00Z",
+            (
+                float(f"{consumption[(day, hour)]:.3f}")
+                if consumption[(day, hour)] is not None
+                else None
+            ),
+            float(f"{prices[(day, hour)]:.5f}"),
+            float(f"{weather[(day, hour)]:.1f}"),
+        )
+        for day, hour in ordered_keys
+    ]
+
+    try:
+        with sqlite3.connect(DATABASE_PATH) as connection:
+            connection.execute("DELETE FROM hourly_measurements")
+            connection.executemany("""
+                INSERT INTO hourly_measurements (
+                    timestamp, consumption_kwh, price_eur_kwh, temperature
+                ) VALUES (?, ?, ?, ?)
+            """, rows)
+    except sqlite3.Error as e:
+        print(f"Napaka pri vnosu podatkov v bazo: {e}")
+
+
 def generate_xml_files() -> int:
     consumption = _read_consumption(RAW_DIR / "poraba.csv")
     prices = _read_prices(RAW_DIR / "cene.json")
@@ -149,6 +185,7 @@ def generate_xml_files() -> int:
     _write_xml(OUTPUT_DIR / "poraba.xml", consumption_root)
     _write_xml(OUTPUT_DIR / "cene.xml", prices_root)
     _write_xml(OUTPUT_DIR / "vreme.xml", weather_root)
+    _insert_measurements_in_db(ordered_keys, consumption, prices, weather)
     return len(ordered_keys)
 
 
