@@ -6,11 +6,12 @@ from smart_home_energy.naloga3.open_data import (
     get_chart_data,
     get_filter_options,
 )
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from smart_home_energy.naloga4.prompts import create_prompt
 from smart_home_energy.naloga4.llm_service import analyze_energy
 from smart_home_energy.naloga5 import energy_pb2, energy_pb2_grpc
 from smart_home_energy.naloga5.data_service import load_data
+from smart_home_energy.naloga7.client import PipeUnavailableError, request_analysis
 
 app = FastAPI()
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -100,6 +101,28 @@ def grpc_http_error(error):
 def grpc_page() -> FileResponse:
     """Vrne stran za prikaz podatkov, pridobljenih prek gRPC."""
     return FileResponse(PROJECT_DIR / "naloga5" / "energy.html")
+
+
+@app.get("/pipes", include_in_schema=False)
+def named_pipes_page() -> FileResponse:
+    """Vrne stran za energetsko analizo prek poimenovane cevi."""
+    return FileResponse(PROJECT_DIR / "naloga7" / "pipes.html")
+
+
+class PipeAnalysisRequest(BaseModel):
+    period: str = Field(pattern=r"^\d{4}(-(?:0[1-9]|1[0-2]))?$")
+    top_n: int = Field(default=10, ge=1, le=50)
+
+
+@app.post("/api/pipes/analysis")
+def pipe_analysis(request: PipeAnalysisRequest):
+    """Zahteva analizo od ločenega strežniškega procesa prek named pipe."""
+    try:
+        return request_analysis(request.period, request.top_n)
+    except PipeUnavailableError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.get("/api/grpc/consumption")

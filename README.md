@@ -204,3 +204,21 @@ Omogočen je prikaz naslednjih podatkov:
 - statistika
 - najcenejše ure
 - cene v realnem času (streaming) 
+
+### Naloga 7 - Poimenovane cevi
+
+Poženemo strežniški proces v prvem terminalu:
+
+```powershell
+.\.venv\Scripts\python.exe -m smart_home_energy.naloga7.server
+```
+
+V drugem terminalu zaženemo FastAPI aplikacijo:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn smart_home_energy.api:app --reload
+```
+
+Odpremo `http://127.0.0.1:8000/pipes`, izberemo obdobje in število ur. 
+
+Stran omogoča prikaz ur z najvišjimi ocenjenimi stroški, ki jih strežniški proces izračuna in pošlje prek poimenovane cevi.

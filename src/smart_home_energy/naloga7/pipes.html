@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="sl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pregled ur z najvišjimi stroški</title>
+    <style>
+        :root { color-scheme: light; font-family: system-ui, sans-serif; color: #17324d; background: #f3f7fa; }
+        body { max-width: 1000px; margin: 2rem auto; padding: 0 1rem 3rem; }
+        .card { background: white; border: 1px solid #dbe5ed; border-radius: 12px; padding: 1.25rem; margin: 1rem 0; }
+        form { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); align-items: end; }
+        label { display: grid; gap: .4rem; font-weight: 600; }
+        select, input, button { font: inherit; padding: .65rem; border-radius: 7px; border: 1px solid #b8c8d5; }
+        button { color: white; background: #1769aa; border: 0; cursor: pointer; font-weight: 650; }
+        button:disabled { opacity: .6; cursor: wait; }
+        #status { min-height: 1.5rem; } .error { color: #a12626; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { text-align: left; border-bottom: 1px solid #dbe5ed; padding: .55rem; }
+        .table-wrap { overflow-x: auto; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .75rem; }
+    </style>
+</head>
+<body>
+    <p><a href="/">← Pregled projekta</a></p>
+    <h1>Pregled ur z najvišjimi stroški</h1>
+    <p>Izberite obdobje in število ur za prikaz. Podatki so pridobljeni preko poimenovanih cevi.</p>
+    <section class="card">
+        <form id="query-form">
+            <label>Obdobje
+                <select id="period">
+                    <option value="2025-01">Januar 2025</option><option value="2025-02">Februar 2025</option>
+                    <option value="2025-03">Marec 2025</option><option value="2025-04">April 2025</option>
+                    <option value="2025-05">Maj 2025</option><option value="2025-06">Junij 2025</option>
+                    <option value="2025-07">Julij 2025</option><option value="2025-08">Avgust 2025</option>
+                    <option value="2025-09">September 2025</option><option value="2025-10">Oktober 2025</option>
+                    <option value="2025-11">November 2025</option><option value="2025-12">December 2025</option>
+                    <option value="2025">Celotno leto 2025</option>
+                </select>
+            </label>
+            <label>Število ur za prikaz
+                <input id="top-n" type="number" min="1" max="50" value="10" required>
+            </label>
+            <button id="submit" type="submit">Pridobi analizo</button>
+        </form>
+    </section>
+    <p id="status" role="status" aria-live="polite"></p>
+    <section id="result" class="card" aria-live="polite" hidden></section>
+    <script>
+        const form = document.getElementById("query-form");
+        const button = document.getElementById("submit");
+        const status = document.getElementById("status");
+        const result = document.getElementById("result");
+        const fmt = (value, digits) => Number(value).toLocaleString("sl-SI", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+
+        function showTable(rows) {
+            const wrap = document.createElement("div"); wrap.className = "table-wrap";
+            const table = document.createElement("table");
+            const headers = ["Datum", "Ura", "Poraba (kWh)", "Cena (EUR/kWh)", "Temperatura (°C)", "Ocenjeni strošek (EUR)"];
+            const head = document.createElement("thead"); const headerRow = document.createElement("tr");
+            headers.forEach((label) => { const cell = document.createElement("th"); cell.textContent = label; headerRow.append(cell); });
+            head.append(headerRow); table.append(head);
+            const body = document.createElement("tbody");
+            rows.forEach((item) => {
+                const row = document.createElement("tr");
+                [item.date, item.hour, fmt(item.consumption_kwh, 3), fmt(item.price_eur_kwh, 5),
+                    item.temperature_c == null ? "Ni podatka" : fmt(item.temperature_c, 1), fmt(item.estimated_cost_eur, 4)]
+                    .forEach((value) => { const cell = document.createElement("td"); cell.textContent = value; row.append(cell); });
+                body.append(row);
+            });
+            table.append(body); wrap.append(table); result.append(wrap);
+        }
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            button.disabled = true; result.replaceChildren(); result.hidden = false;
+            status.className = ""; status.textContent = "Pošiljam zahtevo energetskemu strežniku …";
+            try {
+                const response = await fetch("/api/pipes/analysis", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ period: document.getElementById("period").value, top_n: Number(document.getElementById("top-n").value) })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.detail || "Analize ni bilo mogoče pridobiti.");
+                const heading = document.createElement("h2"); heading.textContent = "Ure z najvišjimi ocenjenimi stroški"; result.append(heading);
+                showTable(data.highest_cost_hours);
+                status.textContent = "Analiza je prejeta prek poimenovane cevi.";
+            } catch (error) {
+                status.className = "error"; status.textContent = error.message;
+            } finally { button.disabled = false; }
+        });
+    </script>
+</body>
+</html>
